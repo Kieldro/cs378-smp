@@ -23,20 +23,26 @@ const static int DEBUG = true;
 /*
 reads two ints into i and j
 @param r a  std::istream
-@param i an int by reference
-@param j an int by reference
+@param men is 2d array
 @return true if that succeeds, false otherwise
 */
-bool read (std::istream& r, int& t, int& n) {
-	r >> t;
+bool read (std::istream& r, int** men) {
+	assert(r != NULL);
 	
 	if (!r)
 		return false;
+	
+	int n;
 	r >> n;
 
+	for(int j = 0; j < n; ++j){
+		men = new int[n][2];
+		for(int k = 0; j < n; ++j)
+			r >> men[j][0];
+	}
 
-	assert(t <= 100);
-	assert(t >= 0);
+
+
 	assert(n <= 500);
 	assert(n >= 0);
 
@@ -98,6 +104,7 @@ void print (std::ostream& w, int i, int j, int v) {
 	assert(v > 0);
 
 	w << i << " " << j << " " << v << std::endl;
+	//delete men;
 }
 
 // -------------
@@ -112,7 +119,14 @@ void print (std::ostream& w, int i, int j, int v) {
 void solve (std::istream& r, std::ostream& w) {
 	int t;
 	int n;
-	while (read(r, t, n)) {
+	int** men;
+
+	r >> t;		// number of test cases
+	assert(t <= 100);
+	assert(t >= 0);
+
+	for(int i = 0; i < t; ++i){
+		read(r, men);
 		const int v = eval(t, n);
 		print(w, t, n, v);
 	}

@@ -15,24 +15,24 @@ fi
 echo COMPILING...
 g++ -ansi -pedantic -Wall $source -o $source.app
 
-echo RUNNING PROGRAM...
-$source.app < $inFile #>& $outFile
-#valgrind $source.app < $inFile >& $outFile
+if ([ $? == 0 ]); then		# if no errors
+	echo RUNNING PROGRAM...
+	$source.app < $inFile #>& $outFile
+	#valgrind $source.app < $inFile >& $outFile
 
-echo CHECKING OUTPUT...; diff -lc RunSMP.out RunSMP.in
+	echo CHECKING OUTPUT...; diff -lc RunSMP.out RunSMP.in
 
-echo GENERATING COMMIT LOG...
-git log > SMP.log
-
-#echo RUNNING DOXYGEN...; doxygen Doxyfile
+	echo GENERATING COMMIT LOG...
+	git log > SMP.log
 
 <<MULTICOMMENT
-free comments!source
+	#echo RUNNING DOXYGEN...; doxygen Doxyfile
 
-#echo UPDATING SPHERECOLLATZ FILE...; cp $source Sphere$source
+	#echo UPDATING SPHERE FILE...; cp $source Sphere$source
 
-zip SMP README.txt html/* RunSMP.c++ RunSMP.h RunSMP.in RunSMP.out SMP.h SMP.log SphereSMP.c++ TestSMP.c++ TestSMP.out
+	zip SMP README.txt html/* RunSMP.c++ RunSMP.h RunSMP.in RunSMP.out SMP.h SMP.log SphereSMP.c++ TestSMP.c++ TestSMP.out
 
-turnin --submit inbleric cs378pj2 SMP.zip
+	turnin --submit inbleric cs378pj2 SMP.zip
 
 MULTICOMMENT
+fi

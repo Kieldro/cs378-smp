@@ -1,3 +1,11 @@
+/*
+Ian Buitrago
+6-18-2012
+CS 378
+Project 2: Stable Marriage Problem
+*/
+
+
 // --------
 // includes
 // --------
@@ -59,27 +67,12 @@ int eval (int i, int j) {
 	assert(i > 0);
 	assert(j > 0);
 
-	if (i > j){		// swap
-		int t = i;
-		i = j;
-		j = t;
-	}
-
-	// optimize range
-	if (i < j/2){
-		i = j/2;
-	}
-
 	int v = 1;
-	for (int x = i; x <= j; ++x){
-		int cLen = cycleLength(x);
-		if (cLen > v)
-			v = cLen;
-		
-	}
+
 	assert(v > 0);
 
-	return v;}
+	return v;
+}
 
 
 // -------------
@@ -97,7 +90,9 @@ void print (std::ostream& w, int i, int j, int v) {
 	assert(i > 0);
 	assert(j > 0);
 	assert(v > 0);
-	w << i << " " << j << " " << v << std::endl;}
+
+	w << i << " " << j << " " << v << std::endl;
+}
 
 // -------------
 // solve
@@ -111,7 +106,8 @@ void print (std::ostream& w, int i, int j, int v) {
 void solve (std::istream& r, std::ostream& w) {
 	int i;
 	int j;
-	while (collatz_read(r, i, j)) {
-		const int v = collatz_eval(i, j);
-		collatz_print(w, i, j, v);}
+	while (read(r, i, j)) {
+		const int v = eval(i, j);
+		print(w, i, j, v);
+	}
 }

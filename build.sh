@@ -1,8 +1,8 @@
 # file variables
-source="RunCollatz.c++"
-unitFile="TestCollatz.c++"
-inFile="RunCollatz.in"
-outFile="RunCollatz.out"
+source="RunSMP.c++"
+unitFile="TestSMP.c++"
+inFile="RunSMP.in"
+outFile="RunSMP.out"
 compile=true
 unit=false
 
@@ -19,7 +19,7 @@ echo RUNNING PROGRAM...
 $source.app < $inFile #>& $outFile
 #valgrind $source.app < $inFile >& $outFile
 
-echo CHECKING OUTPUT...; diff -lc RunCollatz.out RunCollatz.in
+echo CHECKING OUTPUT...; diff -lc RunSMP.out RunSMP.in
 
 echo GENERATING COMMIT LOG...
 git log > Collatz.log
@@ -27,9 +27,8 @@ git log > Collatz.log
 #echo RUNNING DOXYGEN...; doxygen Doxyfile
 
 <<MULTICOMMENT
-free comments!
-
-#echo UPDATING SPHERECOLLATZ FILE...
-#cp Collatz.c++ SphereCollatz.c++
+free comments!source
 
 MULTICOMMENT
+
+#echo UPDATING SPHERECOLLATZ FILE...; cp $source Sphere$

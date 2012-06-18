@@ -17,15 +17,15 @@ g++ -ansi -pedantic -Wall $source -o $source.app
 
 if ([ $? == 0 ]); then		# if no errors
 	echo RUNNING PROGRAM...
-	$source.app < $inFile #>& $outFile
-	#valgrind $source.app < $inFile >& $outFile
+	./$source.app < $inFile #>& $outFile
+	#valgrind ./$source.app < $inFile >& $outFile
+
+<<MULTICOMMENT
 
 	echo CHECKING OUTPUT...; diff -lc RunSMP.out RunSMP.in
 
 	echo GENERATING COMMIT LOG...
 	git log > SMP.log
-
-<<MULTICOMMENT
 	#echo RUNNING DOXYGEN...; doxygen Doxyfile
 
 	#echo UPDATING SPHERE FILE...; cp $source Sphere$source

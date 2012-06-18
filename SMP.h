@@ -12,6 +12,9 @@ Project 2: Stable Marriage Problem
 
 #include <cassert>  // assert
 #include <iostream> // endl, istream, ostream
+#include <vector>
+
+using namespace std;
 
 // globals
 const static int DEBUG = true;
@@ -26,25 +29,45 @@ reads two ints into i and j
 @param men is 2d array
 @return true if that succeeds, false otherwise
 */
-bool read (std::istream& r, int** men) {
+bool read (istream& r, vector< vector<int> > men, vector< vector<int> > women){
 	assert(r != NULL);
-	
+
 	if (!r)
 		return false;
 	
-	int n;
+	int n;		// number of marriages
 	r >> n;
+	if (DEBUG) cerr << "n: " << n << endl;
+	assert(n <= 500);
+	assert(n >= 0);
 
-	for(int j = 0; j < n; ++j){
-		men = new int[n][2];
-		for(int k = 0; j < n; ++j)
-			r >> men[j][0];
+	men.resize(n+1);		// 0th element is always empty
+	for(int i = 1; i < n+1; ++i){
+		men[i].resize(n+1);
+		int x;
+		r >> x;		// unneeded input
+		//if (DEBUG) cerr << "men[0][0]: " << men[0][0] << endl;
+		for(int j = 1; j < n+1; ++j){
+			r >> men[i][j];
+			if (DEBUG) cerr << men[i][j] << " ";
+		}
+		if (DEBUG) cerr << endl;
+	}
+	
+	women.resize(n+1);		// 0th element is always empty
+	for(int i = 1; i < n+1; ++i){
+		women[i].resize(n+1);
+		int x;
+		r >> x;		// unneeded input
+		for(int j = 1; j < n+1; ++j){
+			r >> women[i][j];
+			if (DEBUG) cerr << women[i][j] << " ";
+		}
+		if (DEBUG) cerr << endl;
 	}
 
 
 
-	assert(n <= 500);
-	assert(n >= 0);
 
 	return true;
 }
@@ -98,13 +121,12 @@ int eval (int t, int n) {
  * @param j the end       of the range, inclusive
  * @param v the max cycle length
  */
-void print (std::ostream& w, int i, int j, int v) {
+void print (ostream& w, int i, int j, int v) {
 	assert(i > 0);
 	assert(j > 0);
 	assert(v > 0);
 
-	w << i << " " << j << " " << v << std::endl;
-	//delete men;
+	w << i << " " << j << " " << v << endl;
 }
 
 // -------------
@@ -116,18 +138,18 @@ void print (std::ostream& w, int i, int j, int v) {
  * @param r a std::istream
  * @param w a std::ostream
  */
-void solve (std::istream& r, std::ostream& w) {
+void solve (istream& r, ostream& w) {
 	int t;
-	int n;
-	int** men;
+	vector< vector<int> > men, women;
 
 	r >> t;		// number of test cases
+	if (DEBUG) cerr << "t: " << t << endl;
 	assert(t <= 100);
 	assert(t >= 0);
 
 	for(int i = 0; i < t; ++i){
-		read(r, men);
-		const int v = eval(t, n);
-		print(w, t, n, v);
+		read(r, men, women);
+	//	const int v = eval(t, men, women);
+	//	print(w, t, n, v);
 	}
 }

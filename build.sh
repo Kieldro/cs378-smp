@@ -22,13 +22,17 @@ $source.app < $inFile #>& $outFile
 echo CHECKING OUTPUT...; diff -lc RunSMP.out RunSMP.in
 
 echo GENERATING COMMIT LOG...
-git log > Collatz.log
+git log > SMP.log
 
 #echo RUNNING DOXYGEN...; doxygen Doxyfile
 
 <<MULTICOMMENT
 free comments!source
 
-MULTICOMMENT
+#echo UPDATING SPHERECOLLATZ FILE...; cp $source Sphere$source
 
-#echo UPDATING SPHERECOLLATZ FILE...; cp $source Sphere$
+zip SMP README.txt html/* RunSMP.c++ RunSMP.h RunSMP.in RunSMP.out SMP.h SMP.log SphereSMP.c++ TestSMP.c++ TestSMP.out
+
+turnin --submit inbleric cs378pj2 SMP.zip
+
+MULTICOMMENT

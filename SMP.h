@@ -27,16 +27,21 @@ reads two ints into i and j
 @param j an int by reference
 @return true if that succeeds, false otherwise
 */
-bool read (std::istream& r, int& i, int& j) {
-	r >> i;
+bool read (std::istream& r, int& t, int& n) {
+	r >> t;
+	
 	if (!r)
 		return false;
-	r >> j;
+	r >> n;
 
 
-	assert(i > 0);
-	assert(j > 0);
-	return true;}
+	assert(t <= 100);
+	assert(t >= 0);
+	assert(n <= 500);
+	assert(n >= 0);
+
+	return true;
+}
 
 // -------------
 // cycleLength
@@ -63,9 +68,10 @@ int cycleLength (int n) {
  * @param j the end       of the range, inclusive
  * @return the max cycle length in the range [i, j]
  */
-int eval (int i, int j) {
-	assert(i > 0);
-	assert(j > 0);
+int eval (int t, int n) {
+	assert(t <= 100);
+	assert(t >= 0);
+	assert(n <= 500);
 
 	int v = 1;
 
@@ -104,10 +110,10 @@ void print (std::ostream& w, int i, int j, int v) {
  * @param w a std::ostream
  */
 void solve (std::istream& r, std::ostream& w) {
-	int i;
-	int j;
-	while (read(r, i, j)) {
-		const int v = eval(i, j);
-		print(w, i, j, v);
+	int t;
+	int n;
+	while (read(r, t, n)) {
+		const int v = eval(t, n);
+		print(w, t, n, v);
 	}
 }

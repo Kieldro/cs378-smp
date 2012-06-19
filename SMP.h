@@ -17,11 +17,20 @@ using namespace std;
 // globals
 const static int DEBUG = true;
 
+// function decalarations
+bool populate(istream& r, const int n, vector< vector<int> >& humans);
+bool read (istream& r, int& n, vector< vector<int> >& men, vector< vector<int> >& women);
+vector< vector<int> > eval (int n, vector< vector<int> > men, vector< vector<int> > women);
+void print (ostream& w, int n, vector< vector<int> > solution);
+void solve (istream& r, ostream& w);
+
 // -------------
 // populate
 /**
- * returns v, the cycle length
- * @param n positive integer
+ * returns true if successful
+ * @param r input stream
+ * @param n constant integer number of preferences/marriages
+ * @param humans vector of vector of ints
  */
 bool populate(istream& r, const int n, vector< vector<int> >& humans){
 	assert(n >= 0);
@@ -100,8 +109,18 @@ vector< vector<int> > eval (int n, vector< vector<int> > men, vector< vector<int
  * @param v the max cycle length
  */
 void print (ostream& w, int n, vector< vector<int> > solution) {
+	assert(n > 0);
+	assert(solution.size() == (unsigned)n );
+	assert(solution[0].size() == (unsigned)2 );
+
 	for(int i = 0; i < n; ++i)
 		w << solution[i][0] << " " << solution[i][1] << endl;
+
+
+	static const int arr[] = {16,2,77,29};
+	vector<int> vec (arr, arr + sizeof(arr) / sizeof(arr[0]) );
+	for(vector<int>::iterator i = vec.begin(); i != vec.end(); ++i)
+		if (DEBUG) cerr << "vec: " << *i << endl;
 }
 
 // -------------

@@ -5,23 +5,27 @@ CS 378
 Project 2: Stable Marriage Problem
 */
 
-
 // --------
 // includes
 #include <cassert>  // assert
 #include <iostream> // endl, istream, ostream
 #include <vector>
 
+// macros
+#define DEBUG true
+
 using namespace std;
 
-// globals
-const static int DEBUG = true;
+typedef vector< vector<int> > vvec;
 
-// function decalarations
-bool populate(istream& r, const int n, vector< vector<int> >& humans);
-bool read (istream& r, int& n, vector< vector<int> >& men, vector< vector<int> >& women);
-vector< vector<int> > eval (int n, vector< vector<int> > men, vector< vector<int> > women);
-void print (ostream& w, int n, vector< vector<int> > solution);
+// globals
+
+
+// prototypes
+bool populate(istream& r, const int n, vvec& humans);
+bool read (istream& r, int& n, vvec& men, vvec& women);
+vvec eval (int n, vvec men, vvec women);
+void print (ostream& w, int n, vvec solution);
 void solve (istream& r, ostream& w);
 
 // -------------
@@ -32,7 +36,7 @@ void solve (istream& r, ostream& w);
  * @param n constant integer number of preferences/marriages
  * @param humans vector of vector of ints
  */
-bool populate(istream& r, const int n, vector< vector<int> >& humans){
+bool populate(istream& r, const int n, vvec& humans){
 	assert(n >= 0);
 
 	humans.resize(n+1);		// 0th element is always empty
@@ -58,7 +62,7 @@ reads two ints into i and j
 @param men is 2d array
 @return true if that succeeds, false otherwise
 */
-bool read (istream& r, int& n, vector< vector<int> >& men, vector< vector<int> >& women){
+bool read (istream& r, int& n, vvec& men, vvec& women){
 	assert(r != NULL);
 
 	if (!r)
@@ -82,8 +86,8 @@ bool read (istream& r, int& n, vector< vector<int> >& men, vector< vector<int> >
  * @param j the end       of the range, inclusive
  * @return the max cycle length in the range [i, j]
  */
-vector< vector<int> > eval (int n, vector< vector<int> > men, vector< vector<int> > women) {
-	vector< vector<int> > solution(n,  vector<int> (2) );
+vvec eval (int n, vvec men, vvec women) {
+	vvec solution(n,  vector<int> (2) );
 
 	//if (DEBUG) cerr << "men size: " << men.size() << endl;
 	assert(men.size() == (n+1) );
@@ -108,7 +112,7 @@ vector< vector<int> > eval (int n, vector< vector<int> > men, vector< vector<int
  * @param j the end       of the range, inclusive
  * @param v the max cycle length
  */
-void print (ostream& w, int n, vector< vector<int> > solution) {
+void print (ostream& w, int n, vvec solution) {
 	assert(n > 0);
 	assert(solution.size() == (unsigned)n );
 	assert(solution[0].size() == (unsigned)2 );
@@ -116,11 +120,12 @@ void print (ostream& w, int n, vector< vector<int> > solution) {
 	for(int i = 0; i < n; ++i)
 		w << solution[i][0] << " " << solution[i][1] << endl;
 
-
+/* initialize vector
 	static const int arr[] = {16,2,77,29};
 	vector<int> vec (arr, arr + sizeof(arr) / sizeof(arr[0]) );
 	for(vector<int>::iterator i = vec.begin(); i != vec.end(); ++i)
 		if (DEBUG) cerr << "vec: " << *i << endl;
+*/
 }
 
 // -------------
@@ -133,8 +138,8 @@ void print (ostream& w, int n, vector< vector<int> > solution) {
 void solve (istream& r, ostream& w) {
 	int t = 0;		// number of test cases
 	int n = 0;		// number of marriages
-	vector< vector<int> > solution;
-	vector< vector<int> > men, women;
+	vvec solution;
+	vvec men, women;
 
 
 	r >> t;		// number of test cases

@@ -81,9 +81,8 @@ bool populateWomen(istream& r, const int n, vvec& women){
 		for(int j = 0, man = -1; j < n; ++j){
 			r >> man;
 			women[i][man] = j;
-			if (DEBUG) cerr << women[i][j] << " ";
+			//if (DEBUG) cerr << women[i][j] << " ";
 		}
-		if (DEBUG) cerr << endl;
 	}
 	if (DEBUG) cerr << "end of populateWomen()." << endl;
 	return true;
@@ -125,7 +124,7 @@ bool read (istream& r, int& n, vvec& men, vvec& women){
 vvec eval (const int n, vvec men, vvec women) {
 	if (DEBUG) cerr << "eval()..." << endl;
 	vvec solution(n,  vector<int> (2) );
-	deque<int> freeMen(n);
+	deque<int> freeMen;
 
 	// initialize freeMen
 	for(int i = 0; i < n; ++i){
@@ -134,7 +133,7 @@ vvec eval (const int n, vvec men, vvec women) {
 	// freeMen == [1, 2, ..., n]
 
 	while(freeMen.size() > 0){
-		if (DEBUG) cerr << "freesize(): " << freeMen.size() << endl;
+		//if (DEBUG) cerr << "freesize(): " << freeMen.size() << endl;
 		int man = freeMen.front();
 		freeMen.pop_front();		// O(1)
 		int woman = men[man][n+1];		// next woman to propose to
@@ -159,6 +158,13 @@ vvec eval (const int n, vvec men, vvec women) {
 	}
 
 	if (DEBUG) cerr << "end of eval()." << endl;
+
+	for(int i = 0; i < n; ++i){
+		solution[i][0] = i+1;
+		solution[i][1] = men[i+1][0];
+	}
+
+
 	return solution;
 /*
 	{

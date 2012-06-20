@@ -3,7 +3,6 @@ source="RunSMP.c++"
 unitFile="TestSMP.c++"
 inFile="RunSMP.in"
 outFile="RunSMP.out"
-compile=true
 unit=false
 
 if $unit; then

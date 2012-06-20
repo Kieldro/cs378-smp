@@ -36,7 +36,7 @@ struct TestSMP : CppUnit::TestFixture {
     void test_populate_1 () {
         int n = 3;
         istringstream r("1 1 2 3\n2 2 1 3\n3 3 2 1\n");
-        vector< vector<int> > humans;
+        vvec humans;
         populate(r, n, humans);
         CPPUNIT_ASSERT(humans.size() == (unsigned int)n+1);
     }

@@ -10,7 +10,7 @@ Project 2: Stable Marriage Problem
 #include <cassert>  // assert
 #include <iostream> // endl, istream, ostream
 #include <vector>
-#include <queue>
+#include <deque>
 
 // macros
 #define DEBUG true
@@ -23,38 +23,69 @@ typedef vector< vector<int> > vvec;
 
 
 // prototypes
-bool populate(istream& r, const int n, vvec& humans);
+bool populateMen(istream& r, const int n, vvec& men);
 bool read (istream& r, int& n, vvec& men, vvec& women);
 vvec eval (int n, vvec men, vvec women);
 void print (ostream& w, int n, vvec solution);
 void solve (istream& r, ostream& w);
 
 // -------------
-// populate
+// populateMen
 /**
  * returns true if successful
  * @param r input stream
  * @param n constant integer number of preferences/marriages
- * @param humans vector of vector of ints
+ * @param men vector of vector of ints
  */
-bool populate(istream& r, const int n, vvec& humans){
-	if (DEBUG) cerr << "populate()..." << endl;
+bool populateMen(istream& r, const int n, vvec& men){
+	if (DEBUG) cerr << "populateMen()..." << endl;
 	assert(n >= 0);
 
-	humans.resize(n+1);		// 0th element is always empty
+	// 0th element is fiance, 1-n elements hold the rank of the preferences, n+1 is next proposal
+	men.resize(n+1);		// 0th element is always empty
 	for(int i = 1; i < n+1; ++i){
-		humans[i].resize(n+2);
+		men[i].resize(n+2);
 		int x = 0;
 		r >> x;		// unneeded input
-		for(int j = 0; j < n; ++j){
-			r >> humans[i][j];
-			if (DEBUG) cerr << humans[i][j] << " ";
+		men[i][0] = 0;		// engaged to no one
+		for(int j = 1; j <= n; ++j){
+			r >> men[i][j];
+			if (DEBUG) cerr << men[i][j] << " ";
 		}
-		humans[i][n] = 0;		// engaged to no one
-		humans[i][n+1] = 0;		// index of next proposal
+		men[i][n+1] = 1;		// index of next proposal
 		if (DEBUG) cerr << endl;
 	}
-	if (DEBUG) cerr << "end of populate()." << endl;
+	if (DEBUG) cerr << "end of populateMen()." << endl;
+	return true;
+}
+
+// -------------
+// populateWomen
+/**
+ * returns true if successful
+ * @param r input stream
+ * @param n constant integer number of preferences/marriages
+ * @param women vector of vector of ints
+ */
+bool populateWomen(istream& r, const int n, vvec& women){
+	if (DEBUG) cerr << "populateWomen()..." << endl;
+	assert(n >= 0);
+
+	// 0th element is fiance, 1-n elements hold the rank of the preferences, n+1 is next proposal
+	women.resize(n+1);		// 0th element is always empty
+	for(int i = 1; i < n+1; ++i){
+		women[i].resize(n+1);
+		int x = 0;
+		r >> x;		// unneeded input
+		women[i][0] = 0;		// engaged to no one
+		for(int j = 0, man = -1; j < n; ++j){
+			r >> man;
+			women[i][man] = j;
+			if (DEBUG) cerr << women[i][j] << " ";
+		}
+		if (DEBUG) cerr << endl;
+	}
+	if (DEBUG) cerr << "end of populateWomen()." << endl;
 	return true;
 }
 
@@ -78,8 +109,8 @@ bool read (istream& r, int& n, vvec& men, vvec& women){
 	assert(n <= 500);
 	assert(n >= 0);
 
-	populate(r, n, men);
-	populate(r, n, women);
+	populateMen(r, n, men);
+	populateWomen(r, n, women);
 	if (DEBUG) cerr << "end of read()." << endl;
 	return true;
 }
@@ -91,40 +122,42 @@ bool read (istream& r, int& n, vvec& men, vvec& women){
  * @param j the end       of the range, inclusive
  * @return the max cycle length in the range [i, j]
  */
-vvec eval (int n, vvec men, vvec women) {
+vvec eval (const int n, vvec men, vvec women) {
 	if (DEBUG) cerr << "eval()..." << endl;
 	vvec solution(n,  vector<int> (2) );
-	queue<int> freeMen;
-
+	deque<int> freeMen(n);
 
 	// initialize freeMen
-	for(int i = 1; i <= n; ++i){
-		assert(i != 0);
-		assert(men[i].size() == (unsigned int)(n+2) );
-		freeMen.push(i);
+	for(int i = 0; i < n; ++i){
+		freeMen.push_back(i+1);
 	}
+	// freeMen == [1, 2, ..., n]
 
-	while(freeMen.size() != 0 and men[freeMen.front()][n+1] < n){
-		int man = freeMen.front();		// O(1)
+	while(freeMen.size() > 0){
+		if (DEBUG) cerr << "freesize(): " << freeMen.size() << endl;
+		int man = freeMen.front();
+		freeMen.pop_front();		// O(1)
 		int woman = men[man][n+1];		// next woman to propose to
-		++men[man][n+1];
+		++men[man][n+1];				// set next proposal
 
-		if(women[woman][n] == 0){	// free woman
+		if(women[woman][0] == 0){	// free woman
 			// engage man and woman
-			women[woman][n] = man;
-			men[man][n] = woman;
-			freeMen.pop();		// O(1)
-		}else if(false){
-			int m2 = women[woman][n];		// ex
-			women[woman][n] = man;
-			men[man][n] = woman;
-			freeMen.pop();
-			// disengage former fiance
-			assert(m2 != 0);
-			men[m2][n] = 0;
-			freeMen.push(m2);
+			women[woman][0] = man;
+			men[man][0] = woman;
+		}else{
+			int fiance = women[woman][0];
+			if(women[woman][man] < women[woman][fiance] ){
+				women[woman][0] = man;
+				men[man][0] = woman;
+				// dump former fiance
+				assert(fiance != 0);
+				men[fiance][0] = 0;		// now engaged to no one
+				freeMen.push_back(fiance);
+			}else
+				freeMen.push_back(man);		// man found no willing woman, put back in free pool
 		}
 	}
+
 	if (DEBUG) cerr << "end of eval()." << endl;
 	return solution;
 /*

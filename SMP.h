@@ -10,6 +10,7 @@ Project 2: Stable Marriage Problem
 #include <cassert>  // assert
 #include <iostream> // endl, istream, ostream
 #include <vector>
+#include <queue>
 
 // macros
 #define DEBUG true
@@ -88,6 +89,32 @@ bool read (istream& r, int& n, vvec& men, vvec& women){
  */
 vvec eval (int n, vvec men, vvec women) {
 	vvec solution(n,  vector<int> (2) );
+	queue<int> freeMen;
+
+	// initialize freeMen
+	for(int i = 1; i <= n; ++i){
+		freeMen.push(i);
+	}
+
+	while(freeMen.size() != 0 and men[freeMen.front()][n+1] <= n){
+		int man = freeMen.front();		// O(1)
+		men[man][n+1]++;
+		woman = men[man][n + 1];
+
+		if(women[woman][n+1] == 0){	// free woman
+			// engage man and woman
+			women[woman][n+1] = man;
+			men[man][n+1] = woman;
+			freeMen.pop();		// O(1)
+		}else if(woman prefers man){
+			women[woman][n+1] = man;
+			men[man][n+1] = woman;
+			freeMen.pop();
+			// disengage former fiance
+			freeMen.push(m2);
+			men[m2][n+1]++;
+		}
+	}
 
 	//if (DEBUG) cerr << "men size: " << men.size() << endl;
 	assert(men.size() == (n+1) );
@@ -100,18 +127,19 @@ vvec eval (int n, vvec men, vvec women) {
 
 	assert(true);
 	return solution;
+
 	{
-    Initialize all m ∈ M and w ∈ W to free
-    while ∃ free man m who still has a woman w to propose to {
-       w = m's highest ranked such woman to whom he has not yet proposed
-       if w is free
-         (m, w) become engaged
-       else some pair (m', w) already exists
-         if w prefers m to m'
-           (m, w) become engaged
-           m' becomes free
-         else
-           (m'', w) remain engaged
+	    Initialize all m ∈ M and w ∈ W to free
+	    while ∃ free man m who still has a woman w to propose to {
+	       w = m's highest ranked such woman to whom he has not yet proposed
+	       if w is free
+	         (m, w) become engaged
+	       else some pair (m', w) already exists
+	         if w prefers m to m'
+	           (m, w) become engaged
+	           m' becomes free
+	         else
+	           (m'', w) remain engaged
     }
 
 }

@@ -3,6 +3,9 @@ Ian Buitrago
 6-18-2012
 CS 378
 Project 2: Stable Marriage Problem
+
+run with:
+g++ -ansi -pedantic -Wall SphereSMP.c++ -o SphereSMP.c++.app; ./SphereSMP.c++.app < RunSMP.in
 */
 
 // --------
@@ -13,7 +16,10 @@ Project 2: Stable Marriage Problem
 #include <queue>
 
 // macros
-#define DEBUG true
+#ifdef ONLINE_JUDGE
+    #define NDEBUG
+#endif
+#define DEBUG false
 
 using namespace std;
 
@@ -28,20 +34,6 @@ bool read (istream& r, int& n, vvec& men, vvec& women);
 vvec eval (int n, vvec men, vvec women);
 void print (ostream& w, int n, vvec solution);
 void solve (istream& r, ostream& w);
-
-struct Man{
-	int number = 0;
-	int fiancee = 0;
-	int nextProposal = 0;
-
-	vector<int> preferences;
-
-
-	// constructor
-	Man(n){
-		preferences.resize(n);
-	}
-};
 
 // -------------
 // populateMen
@@ -252,4 +244,15 @@ void solve (istream& r, ostream& w) {
 		print(w, n, solution);
 	}
 	if (DEBUG) cerr << "end of solve()." << endl;
+}
+
+// ----
+// main
+// ----
+
+int main () {
+    using namespace std;
+    ios_base::sync_with_stdio(false); // turn off synchronization with C I/O
+    solve(cin, cout);
+    return 0;
 }

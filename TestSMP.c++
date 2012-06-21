@@ -32,29 +32,51 @@ using namespace std;
 
 struct TestSMP : CppUnit::TestFixture {
     // ----
-    // populate
-    void test_populate_1 () {
+    // populateMen
+    void test_populateMen_1 () {
         int n = 3;
         istringstream r("1 1 2 3\n2 2 1 3\n3 3 2 1\n");
-        vvec humans;
-        populate(r, n, humans);
-        CPPUNIT_ASSERT(humans.size() == (unsigned int)n+1);
+        vvec men;
+        populateMen(r, n, men);
+        CPPUNIT_ASSERT(men.size() == (unsigned int)n+1);
+        CPPUNIT_ASSERT(men[3][0] == 3);
+        CPPUNIT_ASSERT(men[3][1] == 2);
     }
-/*
+
+    void test_populateMen_2 () {
+        int n = 2;
+        istringstream r("1 1 2\n2 2 1\n");
+        vvec men;
+        populateMen(r, n, men);
+        CPPUNIT_ASSERT(men.size() == (unsigned int)n+1);
+        CPPUNIT_ASSERT(men[1][1] == 1);
+        CPPUNIT_ASSERT(men[2][1] == 2);
+    }
+
+    void test_populateMen_3 () {
+        int n = 3;
+        istringstream r("1 1 2 3\n2 2 1 3\n3 3 2 1\n");
+        vvec men;
+        populateMen(r, n, men);
+        CPPUNIT_ASSERT(men.size() == (unsigned int)n+1);
+        CPPUNIT_ASSERT(men[3][0] == 3);
+        CPPUNIT_ASSERT(men[3][1] == 2);
+    }
+
     // ----
     // read
     void test_read_1 () {
-        istringstream r("1\n3\n1 1 2 3\n2 2 1 3\n3 3 2 1\n");
+        istringstream r("3\n1 1 2 3\n2 2 1 3\n3 3 2 1\n");
         int t, n = -1;
         cin >> t;
-        vector< vector<int> > men, women;
+        vvec men, women;
         read(r, n, men, women);
         if (DEBUG) cerr << "men: " << 1 << endl;
         CPPUNIT_ASSERT(n == 3);
-        CPPUNIT_ASSERT( (int)men.size() == n+1);
+        CPPUNIT_ASSERT( (int)men.size() == n+2);
         CPPUNIT_ASSERT( (int)women.size() == n+1);
     }
-
+/*
     // ----
     // eval
     void test_eval_1 () {
@@ -90,10 +112,12 @@ struct TestSMP : CppUnit::TestFixture {
     // suite
     CPPUNIT_TEST_SUITE(TestSMP);
 
- /*   CPPUNIT_TEST(test_populate_1);
+    CPPUNIT_TEST(test_populateMen_1);
+    CPPUNIT_TEST(test_populateMen_2);
+    CPPUNIT_TEST(test_populateMen_3);
 
- /*   CPPUNIT_TEST(test_read_1);
-    CPPUNIT_TEST(test_read_2);
+    CPPUNIT_TEST(test_read_1);
+ /*   CPPUNIT_TEST(test_read_2);
     CPPUNIT_TEST(test_read_3);
 
     CPPUNIT_TEST(test_eval_1);
